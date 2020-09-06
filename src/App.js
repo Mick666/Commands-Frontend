@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Commands from './components/Command'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import blogService from './services/blogs'
+import ContextForm from './components/ContextForm'
+import commandService from './services/commands'
 import loginService from './services/login'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
+    const [commands, setCommands] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [notification, setNotification] = useState(null)
     const [notificationType, setNotificationType] = useState('error')
     const [user, setUser] = useState(null)
-
-    const blogFormRef = React.createRef()
 
     useEffect(() => {
         let loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -24,7 +22,7 @@ const App = () => {
             if (user === null) return
             setUser(user)
             console.log(user)
-            blogService.setToken(user.token)
+            commandService.setToken(user.token)
         }
     }, [])
 
@@ -40,7 +38,7 @@ const App = () => {
             )
             console.log(window.localStorage.getItem('loggedBlogappUser'))
 
-            blogService.setToken(user.token)
+            commandService.setToken(user.token)
             setUser(user)
             console.log(user)
             setUsername('')
@@ -61,30 +59,20 @@ const App = () => {
         setUser(null)
     }
 
-    const addBlog = (blogObject) => {
-        blogFormRef.current.toggleVisibility()
+    const addCommand = (blogObject, contextId) => {
 
-        blogService
-            .create(blogObject)
-            .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog))
+        commandService
+            .create(blogObject, contextId)
+            .then(returnedCommands => {
+                setCommands(returnedCommands)
                 setUser(user)
                 setNotificationType('notification')
-                setNotification(`New blog ${blogObject.title} by ${blogObject.author} added`)
+                setNotification('New command added')
                 setTimeout(() => {
                     setNotification(null)
                 }, 5000)
             })
     }
-
-    const removePost = (event) => {
-        console.log(event.target.dataset.id)
-        blogService
-            .deletePost(event.target.dataset.id)
-            .then(setBlogs(blogs.filter(blog => blog.id !== event.target.dataset.id)))
-            .catch(error => console.log(error))
-    }
-
 
     const loginForm = () => (
         <Togglable buttonLabel='login'>
@@ -98,25 +86,10 @@ const App = () => {
         </Togglable>
     )
 
-    const blogForm = () => (
-        <Togglable buttonLabel='New blog' ref={blogFormRef}>
-            <BlogForm createBlog={addBlog} />
-        </Togglable>
-    )
-
-
-    const increaseLikes = (setLikes, blog) => {
-        let updatedBlog = blog
-        updatedBlog.likes = +updatedBlog.likes + 1
-        blogService
-            .increaseLikes(updatedBlog)
-            .then(setLikes(updatedBlog.likes))
-    }
-
     useEffect(() => {
-        blogService.getAll().then(blogs => {
-            console.log(blogs)
-            setBlogs( blogs)
+        commandService.getAll().then(commands => {
+            console.log(commands)
+            setCommands(commands)
         })
     }, [])
 
@@ -129,19 +102,17 @@ const App = () => {
                     {loginForm()}
                 </div>:
                 <div>
-                    <h2>Blogs</h2>
+                    <h2>Programming commands</h2>
                     {`${user.username} logged in`} <button onClick={handleLogOut}>Log you out</button>
                     <br></br>
-                    <h2>Create new blog</h2>
-                    {blogForm()}
                     <br></br>
-                    {blogs.map(blog =>
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            user={user}
-                            removePost={removePost}
-                            increaseLikes={increaseLikes}/>
+                    {commands.map(command =>
+                        <Commands
+                            key={command.id}
+                            datakey={command.id}
+                            context={command.context}
+                            commands={command.commands}
+                            addCommand={addCommand} />
                     )}
                 </div>
             }
