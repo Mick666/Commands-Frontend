@@ -31,6 +31,14 @@ const create = async (newObject, contextId) => {
     return getAll()
 }
 
+const createContext = async (newObject) => {
+    const config = {
+        headers: { Authorization: token },
+    }
+    await axios.post(`${baseUrl}`, newObject, config)
+    return getAll()
+}
+
 const deletePost = async (id) => {
     const config = {
         headers: { Authorization: token },
@@ -40,4 +48,4 @@ const deletePost = async (id) => {
     return response.data
 }
 
-export default { getAll, setToken, create, deletePost }
+export default { getAll, setToken, create, createContext, deletePost }

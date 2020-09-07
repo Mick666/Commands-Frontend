@@ -33,10 +33,6 @@ body {
     transition: "opacity 1s";
   }
 
-  p {
-      color: red;
-  }
-
 .blogStyle {
   padding-top: 10px;
   padding-left: 2px;
@@ -48,7 +44,7 @@ body {
   margin-right: 100px;
   position: relative;
   margin: 0px auto;
-  width: 570px;
+  width: 750px;
   padding: initial;
   border: 1px solid #D2DBED;
   border-radius: 5px;
@@ -62,8 +58,9 @@ button {
   margin-left: 10px;
 }
 .command {
-  padding-right: 10px;
+  margin-right: 10px;
 }
+
 .newCommand {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -71,4 +68,13 @@ button {
 }
 .revealedCommand {
   margin-top: -20px;
+}
+.commandGrid {
+  display: grid;
+  grid-template-columns: auto;
+
+}
+.commandGroup {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: grid;
 }

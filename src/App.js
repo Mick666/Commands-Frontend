@@ -74,6 +74,21 @@ const App = () => {
             })
     }
 
+    const addContext = (contextObject) => {
+
+        commandService
+            .createContext(contextObject)
+            .then(returnedContexts => {
+                setCommands(returnedContexts)
+                setUser(user)
+                setNotificationType('notification')
+                setNotification('New section added')
+                setTimeout(() => {
+                    setNotification(null)
+                }, 5000)
+            })
+    }
+
     const loginForm = () => (
         <Togglable buttonLabel='login'>
             <LoginForm
@@ -83,6 +98,12 @@ const App = () => {
                 handlePasswordChange={({ target }) => setPassword(target.value)}
                 handleSubmit={handleLogin}
             />
+        </Togglable>
+    )
+
+    const contextForm = () => (
+        <Togglable buttonLabel='Add new section'>
+            <ContextForm createContext={addContext} />
         </Togglable>
     )
 
@@ -105,6 +126,7 @@ const App = () => {
                     <h2>Programming commands</h2>
                     {`${user.username} logged in`} <button onClick={handleLogOut}>Log you out</button>
                     <br></br>
+                    {contextForm()}
                     <br></br>
                     {commands.map(command =>
                         <Commands

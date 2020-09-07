@@ -28,11 +28,16 @@ const CommandTogglable = (props) => {
     )
 }
 
-const Command = ({ command, description }) => {
+{/* <div>{commands.map((command, i) => <p key={i} className='description'>{command.description}</p>)}</div> */}
+const Command = ({ commands }) => {
     return (
-        <div>
-            <span className='command'>{command}</span>
-            <span className='description'>{description}</span>
+        <div className='commandGrid'>
+            {commands.map((command, i) => <div key={i} className='commandGroup'>
+                <p className='command'>{command.command}</p>
+                <p className='description'>{command.description} </p>
+            </div>
+            )}
+
         </div>
     )
 }
@@ -51,13 +56,7 @@ const Commands = ({ context, commands, datakey, addCommand }) => {
         <div className='blogStyle' id={datakey}>
             <CommandTogglable buttonLabel='View' context={context} className='togglableCommand'>
                 <div className='commandParent'>
-                    {commands.map(command =>
-                        <Command
-                            key={command.id}
-                            command={command.command}
-                            description={command.description}
-                        />
-                    )}
+                    <Command commands={commands}/>
                 </div>
                 <div className='newCommand'>
                     {commandForm(addCommand, datakey)}

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 const ContextForm = ({ createContext }) => {
     const [context, setContext] = useState('')
 
-    const addBlog = (event) => {
+    const addContext = (event) => {
         event.preventDefault()
 
         createContext({
@@ -17,7 +17,7 @@ const ContextForm = ({ createContext }) => {
 
     return (
         <div className='formDiv'>
-            <form onSubmit={addBlog}>
+            <form onSubmit={addContext}>
                 Context: <input
                     id='context'
                     value={context}
